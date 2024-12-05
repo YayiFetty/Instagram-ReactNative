@@ -1,63 +1,55 @@
 import React from "react";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Entypo from "@expo/vector-icons/Entypo";
 import { Link, Tabs } from "expo-router";
-import { Pressable } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
+import TabBarIcon from "@/src/components/icon/TabBarIcon";
+import { BlurView } from "expo-blur";
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon({
-  name,
-  color,
-  size,
-  type ="Entypo",
-}: {
-  name: React.ComponentProps<typeof Entypo>["name"] |  React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-  size: number;
-  type: "Entypo"  | "FontAwesome", 
-}) {
-  if(type === "Entypo")return <Entypo  name={name as React.ComponentProps<typeof Entypo>["name"]} size={size} color={color} /> 
-  else if(type === "FontAwesome"){
-    return <FontAwesome  name={name as React.ComponentProps<typeof FontAwesome>["name"]} size={size} color={color} />
-  }
-  return null;
-}
 
 export default function TabLayout() {
   return (
-    <Tabs screenOptions={{}}>
+    <Tabs screenOptions={{
+      tabBarShowLabel:false,
+      headerShown:false,
+      tabBarActiveTintColor:"red",
+      tabBarInactiveTintColor:"blue",
+      
+      tabBarBackground:() => (
+        <BlurView tint="light" intensity={90} style={StyleSheet.absoluteFill}/>
+      )
+    }}>
       <Tabs.Screen
         name="index"
         options={{
-          tabBarIcon: ({ color,size }) => <TabBarIcon type="FontAwesome" name="home" color={color} size={size}  />,
+          
+          tabBarIcon: ({ color,size, focused }) => <TabBarIcon type="MaterialCommunityIcons" name={focused ? "home":"home-outline"} color={color} size={size}  />,
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
-          title: "Search",
-          tabBarIcon: ({ color,size, }) => <TabBarIcon type="FontAwesome" name="search" color={color} size={size}  />,
+          
+          tabBarIcon: ({ color,size, focused }) => <TabBarIcon type="Ionicons" name={focused ? "search" : "search-outline"} color={color} size={size}  />,
         }}
       />
       <Tabs.Screen
         name="create"
         options={{
           title: "Create",
-          tabBarIcon: ({ color,size,}) => <TabBarIcon type="Entypo" name="squared-plus" color={color} size={size}  />,
+          tabBarIcon: ({ color,size, focused}) => <TabBarIcon type="Ionicons" name= {focused ? "add-circle-outline" : "add-circle"} color={color} size={size}  />,
         }}
       />
       <Tabs.Screen
         name="reels"
         options={{
-          title: "Reels",
-          tabBarIcon: ({ color,size, }) => <TabBarIcon type="Entypo" name="video" color={color} size={size}  />,
+          
+          tabBarIcon: ({ color,size,focused }) => <TabBarIcon type="MaterialCommunityIcons" name={focused ? "movie-play-outline":"movie-play"} color={color} size={size}  />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
-          tabBarIcon: ({ color,size, }) => <TabBarIcon type="FontAwesome" name="user-circle" color={color} size={size}  />,
+          
+          tabBarIcon: ({ color,size, focused}) => <TabBarIcon type="Ionicons" name={focused ? "person-circle-outline" : "person-circle"} color={color} size={size}  />,
         }}
       />
     </Tabs>
