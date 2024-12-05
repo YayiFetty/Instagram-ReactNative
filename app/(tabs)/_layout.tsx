@@ -1,50 +1,63 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
-
+import React from "react";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Entypo from "@expo/vector-icons/Entypo";
+import { Link, Tabs } from "expo-router";
+import { Pressable } from "react-native";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
+function TabBarIcon({
+  name,
+  color,
+  size,
+  type ="Entypo",
+}: {
+  name: React.ComponentProps<typeof Entypo>["name"] |  React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
+  size: number;
+  type: "Entypo"  | "FontAwesome", 
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  if(type === "Entypo")return <Entypo  name={name as React.ComponentProps<typeof Entypo>["name"]} size={size} color={color} /> 
+  else if(type === "FontAwesome"){
+    return <FontAwesome  name={name as React.ComponentProps<typeof FontAwesome>["name"]} size={size} color={color} />
+  }
+  return null;
 }
 
 export default function TabLayout() {
-  
-
   return (
-    <Tabs
-      screenOptions={{
-           }}>
+    <Tabs screenOptions={{}}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          tabBarIcon: ({ color,size }) => <TabBarIcon type="FontAwesome" name="home" color={color} size={size}  />,
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="search"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Search",
+          tabBarIcon: ({ color,size, }) => <TabBarIcon type="FontAwesome" name="search" color={color} size={size}  />,
+        }}
+      />
+      <Tabs.Screen
+        name="create"
+        options={{
+          title: "Create",
+          tabBarIcon: ({ color,size,}) => <TabBarIcon type="Entypo" name="squared-plus" color={color} size={size}  />,
+        }}
+      />
+      <Tabs.Screen
+        name="reels"
+        options={{
+          title: "Reels",
+          tabBarIcon: ({ color,size, }) => <TabBarIcon type="Entypo" name="video" color={color} size={size}  />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color,size, }) => <TabBarIcon type="FontAwesome" name="user-circle" color={color} size={size}  />,
         }}
       />
     </Tabs>
