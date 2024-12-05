@@ -13,7 +13,7 @@ const TABS_GROUP = "(tabs)";
 export const AppProvider = ({ children }: React.PropsWithChildren) => {
   const [user, setUser] = useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-
+    const [isOnboarded, setIsOnboarded] = useState<boolean>(false);
   const rootSegment = useSegments();
   const router = useRouter();
   console.log("segment", rootSegment);
@@ -28,8 +28,12 @@ export const AppProvider = ({ children }: React.PropsWithChildren) => {
     const inAuthGroup = rootSegment[0] === AUTH_GROUP;
     const inTabsGroup = rootSegment[0] === TABS_GROUP;
 
-    if (!user && !inAuthGroup) {
+    if (!isOnboarded){
+        router.replace("/(onboarding)/welcome")
+    }
+   else if (!user && !inAuthGroup) {
       router.replace("/(auth)/login");
+
     } else if (user && inAuthGroup) {
       router.replace("/(tabs)/home");
     }
@@ -40,6 +44,13 @@ export const AppProvider = ({ children }: React.PropsWithChildren) => {
       const storedUser = await AsyncStorage.getItem("user");
       if (storedUser) {
         setUser(JSON.parse(storedUser));
+      }
+      const onboardedStatus = await AsyncStorage.getItem("onboarded")
+      if (onboardedStatus === "true"){
+        setIsOnboarded(true)
+      }
+      else{
+        setIsOnboarded(false);
       }
       
     } catch (err) {
@@ -54,6 +65,8 @@ export const AppProvider = ({ children }: React.PropsWithChildren) => {
     user,
     setUser,
     isLoading,
+    isOnboarded,
+    setIsOnboarded
   };
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
