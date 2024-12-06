@@ -3,5 +3,5 @@ export interface ContextValue {
     setUser:React.Dispatch<React.SetStateAction<string |null>>;
     isLoading:boolean;
     isOnboarded:boolean;
-    setIsOnboarded:React.Dispatch<React.SetStateAction<boolean>>;
+    setIsOnboarded:(status: boolean) => void;
 }

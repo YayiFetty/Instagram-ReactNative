@@ -1,82 +1,88 @@
-import React, { useContext, useEffect, useState } from "react";
-import { ContextValue } from "../types/types";
-import { useRouter, useSegments } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const AppContext = React.createContext<any>(null);
+// // src/context/AuthContext.tsx
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import React, { createContext, useState, useEffect, ReactNode } from 'react';
 
 
-// Define constants for routing groups
-const AUTH_GROUP = "(auth)";
-const TABS_GROUP = "(tabs)";
+// interface AuthContextType {
+//   user: object | null;
+//   setUser: (user: object | null) => void;
+//   hasCompletedOnboarding: boolean;
+//   setOnboardingComplete: (status: boolean) => void;
+// }
 
-export const AppProvider = ({ children }: React.PropsWithChildren) => {
-  const [user, setUser] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
-    const [isOnboarded, setIsOnboarded] = useState<boolean>(false);
-  const rootSegment = useSegments();
-  const router = useRouter();
-  console.log("segment", rootSegment);
+// const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// export const AuthProvider = ({ children }: { children: ReactNode }) => {
+//   const [user, setUser] = useState<object | null>(null);
+//   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(false);
+
+//   useEffect(() => {
+//     const loadUserData = async () => {
+//       const storedUser = await AsyncStorage.getItem('user');
+//       const onboardingStatus = await AsyncStorage.getItem('onboardingCompleted');
+      
+//       if (storedUser) setUser(JSON.parse(storedUser));
+//       if (onboardingStatus === 'true') setHasCompletedOnboarding(true);
+//     };
+
+//     loadUserData();
+//   }, []);
+
+//   const setOnboardingComplete = async (status: boolean) => {
+//     await AsyncStorage.setItem('onboardingCompleted', JSON.stringify(status));
+//     setHasCompletedOnboarding(status);
+//   };
+
+//   return (
+//     <AuthContext.Provider value={{ user, setUser, hasCompletedOnboarding, setOnboardingComplete }}>
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// };
+
+// export const useAuth = () => {
+//   const context = React.useContext(AuthContext);
+//   if (!context) {
+//     throw new Error('useAuth must be used within an AuthProvider');
+//   }
+//   return context;
+// };
+
+
+
+// src/context/AuthContext.tsx
+import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';  // Ensure you import AsyncStorage
+
+interface AuthContextType {
+  user: object | null;
+  setUser: (user: object | null) => void;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<object | null>(null);
 
   useEffect(() => {
-    checkAuthStatus();
+    const loadUserData = async () => {
+      const storedUser = await AsyncStorage.getItem('user');
+      if (storedUser) setUser(JSON.parse(storedUser));  // Set the user if found
+    };
+    loadUserData();
   }, []);
 
-  useEffect(() => {
-    if (isLoading) return;
-
-    const inAuthGroup = rootSegment[0] === AUTH_GROUP;
-    const inTabsGroup = rootSegment[0] === TABS_GROUP;
-
-    if (!isOnboarded){
-        router.replace("/(onboarding)/welcome")
-    }
-   else if (!user && !inAuthGroup) {
-      router.replace("/(auth)/login");
-
-    } else if (user && inAuthGroup) {
-      router.replace("/(tabs)/home");
-    }
-  }, [user, rootSegment, isLoading]);
-  // firstly check if the user exist
-  const checkAuthStatus = async () => {
-    try {
-      const storedUser = await AsyncStorage.getItem("user");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
-      const onboardedStatus = await AsyncStorage.getItem("onboarded")
-      if (onboardedStatus === "true"){
-        setIsOnboarded(true)
-      }
-      else{
-        setIsOnboarded(false);
-      }
-      
-    } catch (err) {
-      console.error("error checking status:", err);
-    }
-    finally{
-        setIsLoading(false);
-    }
-  };
-
-  const contextValue: ContextValue = {
-    user,
-    setUser,
-    isLoading,
-    isOnboarded,
-    setIsOnboarded
-  };
   return (
-    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  const context = useContext(AppContext);
+  const context = React.useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used ");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
