@@ -19,7 +19,7 @@ export default function RootLayout() {
         
       }}>
         <Stack.Screen name="index" options={{headerShown:false,}}/>
-        <Stack.Screen name="(routes)/onboard"/>
+        <Stack.Screen name="(routes)/onboard" options={{headerShown:false}}/>
         <Stack.Screen name="(auth)"/>
         <Stack.Screen name="(tabs)"/>
       </Stack>

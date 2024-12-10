@@ -5,23 +5,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 export default function App() {
   return (
     <LinearGradient
-      colors={['#833AB4', '#FD1D1D', '#FCB045', '#F77737']} // Gradient colors
-      style={styles.gradient}
-    >
-      <Text style={styles.text}>Instagram</Text>
-    </LinearGradient>
+    colors={[ '#A631BF', '#EE4B60', '#FF7C45', '#FCCB51' ]}
+    start={{x:0, y:0.2}}
+    end={{x:0, y:0.3}}
+   className='flex-1 justify-center items-center'
+  />
+    
+  
   );
 }
 
-const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-});
