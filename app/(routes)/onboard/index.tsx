@@ -98,7 +98,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import { View, Text, Animated, Easing } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 
+import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function Onboard() {
+  
   // Opacity animations for logos
   const fadeAnim1 = useRef(new Animated.Value(1)).current;
   const fadeAnim2 = useRef(new Animated.Value(0)).current;
@@ -119,6 +123,19 @@ export default function Onboard() {
   const [bgColors, setBgColors] = useState(COLOR_STAGES.initial);
   const [final, setFinal] = useState(false);
 
+  // check onboardig
+  const checkOnbaord = async () => {
+    try{
+      const hasCompletedOnboarding = await AsyncStorage.getItem("hasCompletedOnboarding");
+      if(hasCompletedOnboarding){
+        router.replace("/login");
+        return;
+      }
+    }
+    catch(err){
+      console.error("Error checking onboarding:", err)
+    }
+  }
   // Main logo animation sequence
   const animateLogo = () => {
     Animated.sequence([
@@ -161,13 +178,22 @@ export default function Onboard() {
       })
     ]).start();
 
-    const backgroundTransition = () => {
-      setBgColors(COLOR_STAGES.mid);
+    const backgroundTransition = async () => {
       
       setTimeout(() => {
+        setBgColors(COLOR_STAGES.mid);
+      
+       setTimeout( async () => {
         setBgColors(COLOR_STAGES.final);
         setFinal(true);
+        await AsyncStorage.setItem('hasCompletedOnboarding', 'true');
+            
 
+       },2000)
+        setTimeout(() => {
+          router.replace("/login")
+
+        },4000)
         // Animate text and logo for final screen
         Animated.parallel([
           Animated.spring(textTranslateY, {
@@ -191,6 +217,7 @@ export default function Onboard() {
 
   useEffect(() => {
     animateLogo();
+    checkOnbaord();
   }, []);
 
   return (
