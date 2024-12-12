@@ -1,40 +1,26 @@
+import { useFonts } from 'expo-font'; 
+import * as SplashScreen from 'expo-splash-screen'; 
+import { useEffect } from 'react';
 
-import { useState, useEffect } from 'react';
-import * as Font from 'expo-font';
-import { FontAwesome } from '@expo/vector-icons';
-import * as SplashScreen from 'expo-splash-screen';
+// Define the return type explicitly
+type UseCustomFontsReturn = {
+  fontsLoaded: boolean;
+  error: Error | null;
+};
 
-export default function useCustomFonts() {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+SplashScreen.preventAutoHideAsync();
+
+export default function useCustomFonts(): UseCustomFontsReturn {
+  const [fontsLoaded, error] = useFonts({
+    Insta: require('../../assets/fonts/Instagram.ttf'),
+  });
 
   useEffect(() => {
-    async function loadRes() {
-      try {
-        // Prevent auto hide of splash screen
-        await SplashScreen.preventAutoHideAsync();
-
-        // Load fonts
-        await Font.loadAsync({
-          ...FontAwesome.font, // Load FontAwesome icons
-          PlusJakartaSansbold: require('../assets/fonts/PlusJakartaSans-Bold.ttf'),
-          Insta: require("../../assets/fonts/Instagram.ttf")
-        });
-        setFontsLoaded(true);
-
-      } catch (error) {
-        console.warn('Error loading fonts:', error);
-      } 
-    }
-
-    loadRes();
-  }, []);
-
-  // hide splashscreen when fonts are loaded
-  useEffect(() => {
-    if(fontsLoaded){
+    if (fontsLoaded || error) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded])
+  }, [fontsLoaded, error]);
 
-  return fontsLoaded;
+  // Ensure the hook always returns a defined object
+  return { fontsLoaded: !!fontsLoaded, error };
 }

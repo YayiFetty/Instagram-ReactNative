@@ -4,10 +4,17 @@ import { Stack } from "expo-router";
 import useCustomFonts from "@/src/hooks/useCustomFonts";
 import "../global.css";
 export default function RootLayout() {
-  const fontsLoaded = useCustomFonts();
+  const {fontsLoaded, error} = useCustomFonts();
 
   // show a loading vieww if fonts are not yet loaded
-  if (fontsLoaded) {
+  if (!fontsLoaded) {
+    if(error){
+     return(
+      <View className="w-full h-full flex-1 justify-center items-center">
+      <Text>Error loading fonts: {error.message}</Text>
+    </View>
+     )
+    }
     return (
       <View className=" w-full h-full flex-1 justify-center items-center">
         <ActivityIndicator size="large" />
