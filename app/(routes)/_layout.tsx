@@ -6,7 +6,7 @@ export default function onBoardLayout() {
   return (
     <>
       <Stack>
-        <Stack.Screen name="onboard" options={{ headerShown: false }} />
+        <Stack.Screen name="onboard/index" options={{ headerShown: false }} />
       </Stack>
     </>
   );

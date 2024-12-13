@@ -11,14 +11,14 @@
     "splash": {
       "image": "./assets/images/do.png",
       "resizeMode": "contain",
-      "backgroundColor": "#a9402a"
+      "backgroundColor": "#ccc"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/do.png",
         "backgroundColor": "#ffffff"
       }
     },
