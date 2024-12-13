@@ -69,7 +69,7 @@ export const CustomInput: React.FC<CustomInputs> = ({ type, ...props }) => {
         <View
             className={`flex-row items-center px-4 py-2 rounded-md ${
                 isFocused ? 'border-blue-600 bg-blue-100' : 'border-gray-300 bg-gray-100'
-            } my-3`}
+            } `}
         >
             <TextInput
                 className="flex-1 px-2 text-sm"
