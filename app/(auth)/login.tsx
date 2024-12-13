@@ -6,6 +6,7 @@ import {
   Pressable,
   StyleSheet,
   Button,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import LanguageSelector from "@/src/components/language/LangSelector";
@@ -13,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { CustomButton } from "@/src/components/button/CustomButton";
 import { CustomInput } from "@/src/components/button/CustomInput";
+import { router } from "expo-router";
 
 export default function Login() {
   const { width, height } = Dimensions.get("window");
@@ -119,7 +121,9 @@ export default function Login() {
           >
             <Text className="text-white text-center">
               Don't have an account?{" "}
+              <TouchableOpacity onPress={() => router.push("/(auth)/username")} >
               <Text className="font-bold text-white">Sign up</Text>
+              </TouchableOpacity>
             </Text>
           </View>
         </View>
@@ -127,3 +131,10 @@ export default function Login() {
     </SafeAreaView>
   );
 }
+
+
+
+
+
+
+
